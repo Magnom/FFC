@@ -36,7 +36,7 @@ namespace FF.Crawler
                 }
                 currPage++;
             }
-            while (file != "");
+            while (file != "" && currPage<500);
             
 
             return CurrentFilmList;
@@ -111,14 +111,50 @@ namespace FF.Crawler
                 foreach (var q in d)
                 {
                     var currFilm = new Film();
-                    //foreach (var n in q.ChildNodes)
-                    //{
-                        var n = q.SelectNodes(string.Format("//*[contains(@class,'{0}')]", "mc-title"));
-                    if (n != null) {
-                        currFilm.Title = n[0].InnerText;
+
+                    currFilm.Id = Int32.Parse(q.Attributes[0].Value);
+
+                    var n = q.SelectNodes(string.Format(".//*[contains(@class,'{0}')]", "mc-poster"));
+                    if (n != null)
+                    {
+                        currFilm.UrlImagen = n[0].ChildNodes[1].ChildNodes[0].Attributes["src"].Value;
+                        currFilm.UrlFilmaffinity = n[0].ChildNodes[1].Attributes["href"].Value;
+
                     }
-                        
-                    //}
+
+                    n = q.SelectNodes(string.Format(".//*[contains(@class,'{0}')]", "mc-title"));
+                    if (n != null) {
+                        currFilm.ParseTitle(n[0].InnerText);
+                    }
+
+                    n = q.SelectNodes(string.Format(".//*[contains(@class,'{0}')]", "mc-director"));
+                    if (n != null)
+                    {
+                        n = n[0].SelectNodes(string.Format(".//*[contains(@class,'{0}')]", "credits"));
+                        if (n != null)
+                        {
+                            foreach (var c in n)
+                            {
+                                currFilm.Directors.Add(new Person(c.InnerText));
+                            }
+
+                        }
+                    }
+
+                    n = q.SelectNodes(string.Format(".//*[contains(@class,'{0}')]", "mc-cast"));
+                    if (n != null)
+                    {
+                        n = n[0].SelectNodes(string.Format(".//*[contains(@class,'{0}')]", "credits"));
+                        if (n != null)
+                        {
+                            foreach (var c in n)
+                            {
+                                currFilm.Actors.Add(new Person(c.InnerText));
+                            }
+
+                        }
+                    }
+                    
 
                     CurrentFilmList.Add(currFilm);
 

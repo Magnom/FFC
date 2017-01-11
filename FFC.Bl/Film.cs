@@ -117,12 +117,22 @@ namespace FFC.Bl
             Guionist = new List<Person>();
             Musicians = new List<Person>();
             Actors = new List<Person>();
+            Directors = new List<Person>();
         }
         
         public void AddCountry(string value, int IdRole)
         {
         }
+        
+        //El title conte l'any al final entre parentesi
+        public void ParseTitle(string sTitle)        
+        {
+            var final =sTitle.LastIndexOf(')');
+            var inici =sTitle.LastIndexOf('(');
 
+            Title = sTitle.Substring(0, inici);
+            Year = sTitle.Substring(inici + 1, final - inici -1);
+        }
 
         public void SetFieldValue(Campos c, string value, string html)
         {
@@ -156,6 +166,11 @@ namespace FFC.Bl
             }
             else
                 return "";
+        }
+
+        public static Film GetById(List<Film> lst, int itemId)
+        {
+            return lst.FirstOrDefault(p => p.Id == itemId);
         }
     }
 }
