@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFC.Dal", "FFC.Dal\FFC.Dal.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFC.Winforms", "FFC.Winforms\FFC.Winforms\FFC.Winforms.csproj", "{50CAE2B3-1CBA-4CB5-BBD0-07F75090F59A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FF.Crawler", "FF.Crawler\FF.Crawler.csproj", "{9F40C562-42D8-4CC1-8943-1481D6E6114C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{50CAE2B3-1CBA-4CB5-BBD0-07F75090F59A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50CAE2B3-1CBA-4CB5-BBD0-07F75090F59A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50CAE2B3-1CBA-4CB5-BBD0-07F75090F59A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F40C562-42D8-4CC1-8943-1481D6E6114C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F40C562-42D8-4CC1-8943-1481D6E6114C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F40C562-42D8-4CC1-8943-1481D6E6114C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F40C562-42D8-4CC1-8943-1481D6E6114C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

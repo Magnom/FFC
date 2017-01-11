@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FF.Crawler;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,16 @@ namespace FFC.Winforms
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var crwl = new FFCrawler();
+            crwl.InitializeDownLoader(crwl.TmpFolder, null);
+            crwl.TmpFolder = "C:\\tmpFiles\\";
+
+            crwl.InitializeDownLoader(crwl.TmpFolder, "");
+            crwl.ParseUserList(textBox1.Text);
         }
     }
 }
