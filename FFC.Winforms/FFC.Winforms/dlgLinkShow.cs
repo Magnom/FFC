@@ -20,8 +20,7 @@ namespace FFC.Winforms
 
         public void Mostrar(Object urlsTorrent, Film currFilm)
         {
-            //dlgLink.Mostrar(urlsTorrent, crwl.CurrentFilm);
-            //{Url=urlPirateBay,Title = txt, Description=descFile, UrlTorrnet=urlTorrent}
+            Text = currFilm.Title;
             dataGridView1.DataSource = urlsTorrent;
             Show();
 
@@ -32,8 +31,7 @@ namespace FFC.Winforms
         {
             if (dataGridView1.CurrentRow != null)
             {
-                
-
+               
                 var v = new dlgBrowser();
                 v.Mostrar(                    (string)
                         dataGridView1.CurrentRow.DataBoundItem.GetType()
@@ -41,18 +39,6 @@ namespace FFC.Winforms
                             .GetValue(dataGridView1.CurrentRow.DataBoundItem, null));
             }
         }
-
-        /*protected void LB_Click(object sender, EventArgs e)
-        {
-            //attempt to cast the sender as a label
-            Label lbl = sender as Label;
-
-            //if the cast was successful (i.e. not null), navigate to the site
-            if (lbl != null)
-            { 
-                  var v = new dlgBrowser();
-             //   v.Mostrar("http://www.filmaffinity.es" + CurrFilm.UrlFilmaffinity);
-            }
-        }*/
+        
     }
 }

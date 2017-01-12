@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using FFC.Bl;
@@ -10,8 +12,7 @@ namespace FF.Crawler
 {
     public class TPBCrawler : BaseCrawler
     {
-        private const string BaseUrl = "https://fastpiratebay.co.uk";
-        private const string SearchUrl = "https://fastpiratebay.co.uk/s/?q={0}+&page=0&orderby=99";
+        
         
 
         public Film CurrentFilm { get; set; }        
@@ -35,7 +36,7 @@ namespace FF.Crawler
         {
 
 
-            var strSearch = SearchUrl;
+            const string strSearch = FFcConfing.Tpb_SearchUrl;
             //var url = string.Format(SearchUrl, HttpUtility.UrlEncode(f.Title.Trim(), Encoding.GetEncoding("ISO-8859-1")).Replace(' ', '+'));
             var url = string.Format(strSearch, removeAccents(clearName(CurrentFilm.Title)).Trim().Replace(' ', '+'));
             var file = DownloadManager.Download(CurrentFilm.Id.ToString(), url);
@@ -45,7 +46,7 @@ namespace FF.Crawler
             if (removeAccents(clearName(CurrentFilm.Title)) != CurrentFilm.Title)
             {
                 url = string.Format(strSearch, CurrentFilm.Title.Trim().Replace(' ', '+'));
-                file = DownloadManager.Download(CurrentFilm.Id.ToString() + "_c", url);
+                file = DownloadManager.Download(CurrentFilm.Id + "_c", url);
                 var lsUrl_o = ParseSearchResult(file, CurrentFilm, 1);
                 if (lsUrl_o != null) lsUrl = lsUrl.Concat(lsUrl_o).ToList<Object>();
             }
@@ -53,18 +54,18 @@ namespace FF.Crawler
             if (lsUrl.Count == 0 && CurrentFilm.OriginalTitle != null)
             {
                 url = string.Format(strSearch, CurrentFilm.OriginalTitle.Trim().Replace(' ', '+'));
-                file = DownloadManager.Download(CurrentFilm.Id.ToString() + "_o", url);
+                file = DownloadManager.Download(CurrentFilm.Id + "_o", url);
                 lsUrl = ParseSearchResult(file, CurrentFilm, 1);
                 if (lsUrl == null) lsUrl = new List<Object>();
             }
             if (lsUrl.Count == 0)
             {
                 url = string.Format(strSearch, clearName(CurrentFilm.Title).Trim().Replace(' ', '+') + ' ' + CurrentFilm.Year);
-                file = DownloadManager.Download(CurrentFilm.Id.ToString() + "_y", url);
+                file = DownloadManager.Download(CurrentFilm.Id + "_y", url);
                 lsUrl = ParseSearchResult(file, CurrentFilm, 100);
                 if (lsUrl == null) lsUrl = new List<Object>();
                 url = string.Format(strSearch, clearName(CurrentFilm.Title).Trim().Replace(' ', '+') + ' ' + CurrentFilm.GetDirectorName());
-                file = DownloadManager.Download(CurrentFilm.Id.ToString() + "_d", url);
+                file = DownloadManager.Download(CurrentFilm.Id + "_d", url);
                 var lsUrl2 = ParseSearchResult(file, CurrentFilm, 100);
                 if (lsUrl2 == null) lsUrl2 = new List<Object>();
                 lsUrl = lsUrl.Concat(lsUrl2).ToList<Object>();
@@ -86,7 +87,7 @@ namespace FF.Crawler
                 var found = 0;
                 var result = new List<object>();
                 HtmlDocument doc = new HtmlDocument();
-                doc.Load(filePath, Encoding.Default);
+                doc.Load(filePath, Encoding.UTF8);
 
 
 
@@ -110,7 +111,7 @@ namespace FF.Crawler
 
                             //f.AddLinkFile(FILMS.LinkTypes.torrent, descFile, urlPirateBay, urlTorrent);
                             found++;
-                            result.Add(new { Url = BaseUrl + urlPirateBay, Title = txt, Description = descFile, UrlTorrnet = urlTorrent });
+                            result.Add(new { Url = FFcConfing.Tpb_BaseUrl + urlPirateBay, Title = txt, Description = descFile, UrlTorrnet = urlTorrent });
                         }
 
                     }
@@ -127,6 +128,24 @@ namespace FF.Crawler
 
 
         }
+
+        public static List<Object> LoadTorrents(Film f, bool downloadFiles)
+        {
+            var crwl = new TPBCrawler();
+            crwl.InitializeDownLoader(crwl.TmpFolder, null);
+            crwl.TmpFolder = FFcConfing.Tpb_TmpPath;
+
+            crwl.InitializeDownLoader(crwl.TmpFolder, "");
+            crwl.DownloadManager.DownloadFiles = downloadFiles;
+            crwl.CurrentFilm = f;
+            var result= crwl.ParseSearch();
+            f.TorrentLinks = result;
+            f.TorrentLinksCount = result.Count;
+            return result;
+        }
+
+        
+
         /*public override void Parse()
         {
             var file = DownloadManager.Download(CurrentFilm.Id + "_" + cr.Url.Split('/').Last(), cr.Url);

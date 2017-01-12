@@ -13,15 +13,17 @@ namespace FF.Crawler
 {
     public class FFCrawler : BaseCrawler
     {
-        public FFC.Bl.Film CurrentFilm { get; set; }
-        public List<FFC.Bl.Film> CurrentFilmList { get; set; }
+        public Film CurrentFilm { get; set; }
+        
+        public List<Film> CurrentFilmList { get; set; }
 
         public string CurrentCrawlUrl { get; set; }
+        
         public string TmpFolder { get; set; }
 
         const string UrlBase = "http://www.filmaffinity.com";
 
-        public List<FFC.Bl.Film> ParseUserList(string urlList) {
+        public List<Film> ParseUserList(string urlList) {
 
             var file = string.Empty;
             var currPage =1;
@@ -102,7 +104,7 @@ namespace FF.Crawler
         private void ParseUserListResult(string filePath)
         {
             HtmlDocument doc = new HtmlDocument();
-            doc.Load(filePath, Encoding.Default);
+            doc.Load(filePath, Encoding.UTF8);
 
             var d = doc.DocumentNode.SelectNodes(string.Format("//*[contains(@class,'{0}')]", "movies_list"));
             if (d != null)
@@ -110,15 +112,13 @@ namespace FF.Crawler
                 d = d[0].SelectNodes("child::*");
                 foreach (var q in d)
                 {
-                    var currFilm = new Film();
-
-                    currFilm.Id = Int32.Parse(q.Attributes[0].Value);
+                    var currFilm = new Film {Id = Int32.Parse(q.Attributes[0].Value)};
 
                     var n = q.SelectNodes(string.Format(".//*[contains(@class,'{0}')]", "mc-poster"));
                     if (n != null)
                     {
-                        currFilm.UrlImagen = n[0].ChildNodes[1].ChildNodes[0].Attributes["src"].Value;
-                        currFilm.UrlFilmaffinity = n[0].ChildNodes[1].Attributes["href"].Value;
+                        currFilm.UrlImagen = UrlBase + n[0].ChildNodes[1].ChildNodes[0].Attributes["src"].Value;
+                        currFilm.UrlFilmaffinity = UrlBase + n[0].ChildNodes[1].Attributes["href"].Value;
 
                     }
 
@@ -237,6 +237,7 @@ namespace FF.Crawler
 
 
         }
+
         public override void Parse(string cr)
         {
             try
@@ -366,6 +367,15 @@ namespace FF.Crawler
 
                 throw;
             }
+        }
+
+        public static List<Film> LoadFromFilmAffinity(string url)
+        {
+            var crwl = new FFCrawler();
+            crwl.InitializeDownLoader(crwl.TmpFolder, null);
+            crwl.TmpFolder = FFcConfing.Ff_TmpPath;
+            crwl.InitializeDownLoader(crwl.TmpFolder, "");
+            return crwl.ParseUserList(url);
         }
     }
 

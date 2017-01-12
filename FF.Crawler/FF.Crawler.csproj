@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseCrawler.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Downloader.cs" />
     <Compile Include="FFCrawler.cs" />
     <Compile Include="ICrawler.cs" />

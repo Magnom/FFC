@@ -24,23 +24,19 @@ namespace FFC.Winforms
 
         private void BindList()
         {
-            dataGridView1.DataSource = CurrList.Select(p => new { Id = p.Id, Title = p.Title, Año = p.Year, Url = p.UrlFilmaffinity, TorrentCount = p.TorrentLinksCount, ELinkCount = p.ELinksCount })
-                .ToList();
+            dataGridView1.DataSource = CurrList.Select(p => new { Id = p.Id, Title = p.Title, Año = p.Year, Url = p.UrlFilmaffinity, TorrentCount = p.TorrentLinksCount, ELinkCount = p.ELinksCount }).OrderBy(p=>p.Title).ToList();
 
             dataGridView1.Show();
         }
 
         private void LoadList()
         {
-            var crwl = new FFCrawler();
-            crwl.InitializeDownLoader(crwl.TmpFolder, null);
-            crwl.TmpFolder = "C:\\tmpFiles\\";
-            crwl.InitializeDownLoader(crwl.TmpFolder, "");
-            CurrList = crwl.ParseUserList(textBox1.Text);
+
+            CurrList = FFCrawler.LoadFromFilmAffinity(textBox1.Text);
 
             foreach (var f in CurrList)
             {
-               // LoadTorrents(f, false);
+                LoadTorrents(f, false);
             }
             
         }
@@ -51,14 +47,7 @@ namespace FFC.Winforms
             BindList();
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-            
-
-            //
-        }
-            
+       
         private void button2_Click(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentRow != null)
@@ -69,26 +58,14 @@ namespace FFC.Winforms
                             .GetProperty("Id")
                             .GetValue(dataGridView1.CurrentRow.DataBoundItem, null));
                 var v = new dlgBrowser();
-                v.Mostrar("http://www.filmaffinity.es" + CurrFilm.UrlFilmaffinity);
+                v.Mostrar(CurrFilm.UrlFilmaffinity);
             }
             
         }
 
         public List<Object> LoadTorrents(Film f, bool downloadFiles)
         {
-            var crwl = new TPBCrawler();
-            crwl.InitializeDownLoader(crwl.TmpFolder, null);
-            crwl.TmpFolder = "C:\\tmpFiles\\Torrent\\";
-
-            crwl.InitializeDownLoader(crwl.TmpFolder, "");
-            crwl.DownloadManager.DownloadFiles = downloadFiles;
-            crwl.CurrentFilm = f;
-            var urlsTorrent = crwl.ParseSearch();
-
-            f.TorrentLinks = urlsTorrent;
-            f.TorrentLinksCount = urlsTorrent.Count;
-
-            return urlsTorrent;
+            return TPBCrawler.LoadTorrents(f, downloadFiles);
 
         }
         private void button4_Click(object sender, EventArgs e)
@@ -104,6 +81,7 @@ namespace FFC.Winforms
 
                 var urlsTorrent = LoadTorrents(CurrFilm, true);
                 
+                
                 BindList();
 
                 var dlgLink = new dlgLinkShow();
@@ -117,25 +95,6 @@ namespace FFC.Winforms
 
         }
     }
-
-    public class DeleteCell : DataGridViewButtonCell
-    {
-        Image del = Image.FromFile("..\\..\\img\\delete.ico");
-        protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex, DataGridViewElementStates elementState, object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
-        {
-            base.Paint(graphics, clipBounds, cellBounds, rowIndex, elementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
-            graphics.DrawImage(del, cellBounds);
-        }
-    }
-
-    public class DeleteColumn : DataGridViewButtonColumn
-    {
-        public DeleteColumn()
-        {
-            this.CellTemplate = new DeleteCell();
-            this.Width = 20;
-            //set other options here 
-        }
-    }
+   
 
 }

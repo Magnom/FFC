@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace FFC.Bl
 {
     public partial class Film
@@ -190,5 +191,7 @@ namespace FFC.Bl
         {
             return lst.FirstOrDefault(p => p.Id == itemId);
         }
+
+     
     }
 }
