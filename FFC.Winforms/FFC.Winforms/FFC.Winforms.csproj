@@ -53,6 +53,12 @@
     <Compile Include="dlgBrowser.Designer.cs">
       <DependentUpon>dlgBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="dlgLinkShow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dlgLinkShow.Designer.cs">
+      <DependentUpon>dlgLinkShow.cs</DependentUpon>
+    </Compile>
     <Compile Include="List.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +69,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="dlgBrowser.resx">
       <DependentUpon>dlgBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dlgLinkShow.resx">
+      <DependentUpon>dlgLinkShow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="List.resx">
       <DependentUpon>List.cs</DependentUpon>

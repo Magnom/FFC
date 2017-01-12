@@ -36,7 +36,7 @@ namespace FF.Crawler
                 }
                 currPage++;
             }
-            while (file != "" && currPage<500);
+            while (file != "" && currPage<100);
             
 
             return CurrentFilmList;

@@ -80,6 +80,22 @@ namespace FFC.Bl
         [DataMember]
         public virtual ICollection<Country> Countries { get; set; }
 
+
+        [DataMember]
+        public virtual int? TorrentLinksCount { get; set; }
+
+
+        [DataMember]
+        public virtual int? ELinksCount { get; set; }
+
+
+        [DataMember]
+        public virtual List<Object> TorrentLinks { get; set; }
+
+        [DataMember]
+        public virtual List<Object> ELinks { get; set; }
+
+
         #endregion
 
         public string GetFilmUrl()
@@ -118,6 +134,8 @@ namespace FFC.Bl
             Musicians = new List<Person>();
             Actors = new List<Person>();
             Directors = new List<Person>();
+            TorrentLinks = new List<Object>();
+            ELinks = new List<Object>();
         }
         
         public void AddCountry(string value, int IdRole)

@@ -12,8 +12,14 @@ namespace FF.Crawler
         public string ProxyUrl { get; set; }
         public string DestinationForder { get; set; }
         public bool UseConsole { get; set; }
+        public bool DownloadFiles { get; set; }
 
         private WebClient Cliente { get; set; }
+
+        public Downloader()
+        {
+            DownloadFiles = true;
+        }
 
         public int DownloadRange(string filename, string url, int IdMin, int IdMax)
         {
@@ -97,7 +103,14 @@ namespace FF.Crawler
                     {
                         Uri Url = new Uri(url);
                         Cliente.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
-                        Cliente.DownloadFile(Url, DestinationForder + filename + (putExt ? ".htm" : ""));
+                        if (DownloadFiles)
+                        {
+                            Cliente.DownloadFile(Url, DestinationForder + filename + (putExt ? ".htm" : ""));
+                        }
+                        else
+                        {
+                            result = "";
+                        }
 
                     }
 

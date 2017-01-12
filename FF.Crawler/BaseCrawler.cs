@@ -11,6 +11,7 @@ namespace FF.Crawler
     {
         public Downloader DownloadManager { get; set; }
         public string UrlParse { get; set; }
+        
 
         public static string EliminaAcentos(string texto)
         {
